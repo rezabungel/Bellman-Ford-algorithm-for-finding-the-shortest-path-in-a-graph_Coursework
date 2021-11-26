@@ -13,97 +13,44 @@ using namespace std;
 int main()
 {
 	setlocale(LC_ALL, "Russian");
-	//Взятие матрицы из файла
+	Timer time;//Объявления таймера.
 
-	//Работа с графом
+	string name_data_file = "Weighted graph.txt";  //Переменная, хранящая путь до файла с данными.
+	string name_save_file = "Result of work.txt"; //Переменная хранящая путь до файла с результатом работы.
 
-	//Вывод результата в файл и консоль.
+	Bellman_Ford Graph(name_data_file);//Взвешанный граф берётся из файла.
 
-	/*!Различные тесты!*/
+	Graph.print_Matrix();//Вывод взвешанного графа в консоль. Взвешанный граф представлен в виде таблицы NxN, где N - кол-во вершин.
 
-	string namefile = "Weighted graph.txt";  //Переменная, хранящая путь до файла.
-	Bellman_Ford mat(namefile);
-	mat.print_Matrix();
-	mat.Algoritm_Bellman_Ford();
-	//mat.print_Result();
-	//mat.print_Result();
+	Graph.Algoritm_Bellman_Ford();//Применение алгоритма Беллмана-Форда. (Результат будет сохранен во внутреннюю переменную класса, также результат можно присвоить матрице 'vector<vector<int>> {имя_матрицы}').
 
+	vector<vector<int>> matrix_min_routes = Graph.Algoritm_Bellman_Ford();//Применение алгоритма Беллмана-Форда. (Результат будет сохранен во внутреннюю переменную класса и присвоен матрице 'vector<vector<int>> {имя_матрицы}').
 
+	Graph.print_Result();//Вывод матрици минимальных маршрутов в консоль для взвешанного графа.
 
+	////Тест геттеров.
+	//vector<vector<int>> test_mat;
+	//test_mat = Graph.get_Matrix();
+	//test_mat = Graph.get_Result();
+	//vector<int> test;
+	//test = Graph.get_Matrix_row(1);
+	//test = Graph.get_Matrix_column(1);
+	//bool test_info;
+	//test_info = Graph.get_Application_of_the_algorithm();
+	//test_info = Graph.get_Negative_cycle();
+	//
+	////Тест сеттеров. (После сеттеров, нужно будет применить алгоритм Беллмана-Форда ещё раз, так как матрица изменилась).
+	//Graph.set_row(3, test);
+	//Graph.set_column(3, test);
 
+	cout << endl << endl << endl << "Тест потокового вывода." << endl;
+	cout << Graph;
+	cout << "Конец теста потокового вывода." << endl << endl << endl;
 
+	Graph.save_work_to_file(name_save_file);
 
-	//bool a = mat.get_Negative_cycle();
-
-
-
-	vector<vector<int>> qqq;
-	qqq = mat.get_Matrix();
-	//Timer t;
-	//qqq= mat.Algoritm_Bellman_Ford();
-	//cout << t.elapsed(); 
-	//cout << "-------------------------------------------Result Matrix-------------------------------------------" << endl;
-	//for (int i = 0; i < qqq.size(); i++)
-	//{
-	//	for (int j = 0; j < qqq[i].size(); j++)
-	//	{
-	//		cout << qqq[i][j] << "\t";
-	//	}
-	//	cout << endl;
-	//}
-	cout << "---------------------------------------------------------------------------------------------------" << endl;
-
-
-
-	/*Timer t;
-	Bellman_Ford AAA(10);
-	AAA.print_Matrix();
-	cout << t.elapsed();*/
-
-	//	vector<int> test = mat.get_row(4);
-		//for (int i = 0; i < 4; i++)
-		//{
-		//	cout << test[i] << "\t";
-		//}
-
-	//	vector<int> test1 = mat.get_column(4);
-		//for (int i = 0; i < 4; i++)
-		//{
-		//	cout << test1[i] << "\t";
-		//}
-
-	//	test.pop_back();
-		//test.push_back(12);
-
-		//cout << endl;
-	//	mat.set_row(1, test);
-
-		//AAA.print();
-
-		//cout << endl << endl << endl;
-
-		//test1.pop_back();
-		//test1.push_back(12);
-
-		//mat.set_column(1, test1);
-		//AAA.print_Matrix();
-		//vector<vector<int>> Matrix1;
-		//int size_Matrix1 = 5;
-		//for (int i = 0; i < size_Matrix1; i++)
-		//{
-		//	vector<int> temp;//Времменный вектор, который необходим для заполнения матрицы смежности.
-		//	for (int j = 0; j < size_Matrix1; j++)
-		//	{
-		//		temp.push_back(rand() % 100 - 5);
-		//	}
-		//	Matrix1.push_back(temp);
-		//}
-		//Bellman_Ford qwe(Matrix1);
-		//qwe.print_Matrix();
-
-		////Для рассчета времени.
-		// Timer t; 
-		//cout << t.elapsed();
-		//t.reset();
+	cout << time.elapsed();//Вывод времени.
+	time.reset();//Сброс таймера.
+	;
 	return 0;
 }

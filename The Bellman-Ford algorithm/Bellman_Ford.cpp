@@ -87,7 +87,7 @@ vector<vector<int>> Bellman_Ford::get_Result()
 	return Result;
 }
 
-vector<int> Bellman_Ford::get_row(int number_row)
+vector<int> Bellman_Ford::get_Matrix_row(int number_row)
 {
 	vector<int> row;
 	if (number_row > 0 && number_row <= Matrix.size())
@@ -104,7 +104,7 @@ vector<int> Bellman_Ford::get_row(int number_row)
 	return row;
 }
 
-vector<int> Bellman_Ford::get_column(int number_column)
+vector<int> Bellman_Ford::get_Matrix_column(int number_column)
 {
 	vector<int> column;
 	if (number_column > 0 && number_column <= Matrix.size())
@@ -311,16 +311,16 @@ vector<vector<int>> Bellman_Ford::Algoritm_Bellman_Ford()
 
 	if (intermediate_matrix == Result)
 	{
-		cout << endl << endl << endl << "***************************************************************************************************" << endl;
-		cout << "Отрицательного цикла в графе - нет.";
-		cout << endl << "***************************************************************************************************" << endl << endl << endl;
+		//cout << endl << endl << endl << "***************************************************************************************************" << endl;
+		//cout << "Отрицательного цикла в графе - нет.";
+		//cout << endl << "***************************************************************************************************" << endl << endl << endl;
 		Negative_cycle = false;
 	}
 	else
 	{
-		cout << endl << endl << endl << "***************************************************************************************************" << endl;
-		cout << "Граф содержит отрицательный цикл." << endl;
-		cout << "Матрица, хранящая информацию о кратчайших путях - будет хранить нули.";
+		//cout << endl << endl << endl << "***************************************************************************************************" << endl;
+		//cout << "Граф содержит отрицательный цикл." << endl;
+		//cout << "Матрица, хранящая информацию о кратчайших путях - будет хранить нули.";
 		for (int i = 0; i < Matrix.size(); i++)
 		{
 			for (int j = 0; j < Matrix.size(); j++)
@@ -328,7 +328,7 @@ vector<vector<int>> Bellman_Ford::Algoritm_Bellman_Ford()
 				Result[i][j] = 0;
 			}
 		}
-		cout << endl << "***************************************************************************************************" << endl << endl << endl;
+		//cout << endl << "***************************************************************************************************" << endl << endl << endl;
 		Negative_cycle = true;
 	}
 	Application_of_the_algorithm = true;
@@ -405,4 +405,77 @@ int Bellman_Ford::find_min(vector<int> result_of_addition)
 		}
 	}
 	return min;
+}
+
+void Bellman_Ford::save_work_to_file(string namefile)
+{
+	ofstream fout;
+	fout.open(namefile);//Если файла нет, то он будет создан.
+
+	if (!fout.is_open())
+	{
+		cout << "***************************************************************************************************" << endl;
+		cout << "Ошибка открытия файла для сохранения данных!" << endl;
+		cout << "***************************************************************************************************" << endl;
+	}
+	else
+	{
+		cout << "***************************************************************************************************" << endl;
+		cout << "Файл для сохранения данных открыт." << endl;
+		fout << *this;
+		cout << "Данные успешно записаны в файл." << endl;
+		cout << "Файл закрыт." << endl;
+		fout.close();//закрываем файл.
+		cout << "***************************************************************************************************" << endl;
+	}
+}
+
+ostream& operator<<(ostream& ustream, Bellman_Ford& obj)
+{
+	string str;
+	str = "Матрица, которая хранит информацию о взвешенном графе.";
+	ustream << str << endl;
+	ustream << "--------------------------------------------Data Matrix--------------------------------------------" << endl;
+	for (int i = 0; i < obj.Matrix.size(); i++)
+	{
+		for (int j = 0; j < obj.Matrix[i].size(); j++)
+		{
+			ustream << obj.Matrix[i][j] << "\t";
+		}
+		ustream << endl;
+	}
+	ustream << "---------------------------------------------------------------------------------------------------" << endl << endl << endl;
+
+	if (obj.Application_of_the_algorithm == true)
+	{
+		if (obj.Negative_cycle == true)
+		{
+			str = "Взвешанный граф имеет отрицательный цикл.";
+			ustream << str << endl;
+		}
+		else
+		{
+			str = "Взвешанный граф не имеет отрицательного цикла.";
+			ustream << str << endl << endl << endl;
+			str = "Матрица кратчайших путей от одной вершины до всех остальных.";
+			ustream << str << endl;
+			ustream << "-------------------------------------------Result Matrix-------------------------------------------" << endl;
+			for (int i = 0; i < obj.Result.size(); i++)
+			{
+				for (int j = 0; j < obj.Result[i].size(); j++)
+				{
+					ustream << obj.Result[i][j] << "\t";
+				}
+				ustream << endl;
+			}
+			ustream << "---------------------------------------------------------------------------------------------------" << endl;
+		}
+	}
+	else
+	{
+		str = "Алгоритм Беллмана-Форда не был применён.";
+		ustream << str << endl;
+	}
+
+	return ustream;
 }
