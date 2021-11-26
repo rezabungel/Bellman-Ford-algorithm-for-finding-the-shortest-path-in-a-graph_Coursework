@@ -232,7 +232,7 @@ void Bellman_Ford::set_Matrix_column(int number_column, vector<int> column)
 
 vector<vector<int>> Bellman_Ford::Algoritm_Bellman_Ford()
 {
-	//Обнуляем матрицу кратчайших путей. Это обнуление будет выполняться, когда мы повторно применяем алгоритм	 (больше 1 раза). 
+	//Обнуляем матрицу кратчайших путей. Это обнуление будет выполняться, когда мы повторно применяем алгоритм (больше 1 раза). 
 	if (Result.size() > 0)
 	{
 		for (int i = 0; i < Result.size(); i++)
@@ -314,6 +314,16 @@ vector<vector<int>> Bellman_Ford::Algoritm_Bellman_Ford()
 		//cout << endl << endl << endl << "***************************************************************************************************" << endl;
 		//cout << "Отрицательного цикла в графе - нет.";
 		//cout << endl << "***************************************************************************************************" << endl << endl << endl;
+		for (int i = 0; i < Matrix.size(); i++) //Заменяем нашу бесконечность на ноль. (пути нет).
+		{
+			for (int j = 0; j < Matrix.size(); j++)
+			{
+				if (Result[i][j] == 9999999)
+				{
+					Result[i][j] = 0;
+				}
+			}
+		}
 		Negative_cycle = false;
 	}
 	else

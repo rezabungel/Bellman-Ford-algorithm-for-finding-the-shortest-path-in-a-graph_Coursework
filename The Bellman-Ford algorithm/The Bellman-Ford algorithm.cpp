@@ -49,7 +49,32 @@ int main()
 
 	Graph.save_work_to_file(name_save_file);
 
-	cout << time.elapsed();//Вывод времени.
+	cout << "Время затраченное на тест методов класса: " << time.elapsed() << endl;//Вывод времени. (Алгоритм Беллмана-Форда применялся два раза).
+	time.reset();//Сброс таймера.
+
+	//Проверка времени работы алгоритма.
+	cout << endl << endl << endl << endl << endl << endl << endl << endl << endl << endl; //Пропускает строчки в консоле для наглядности.
+	cout << "-------------Тест времени работы алгоритма (матрица 100x100 без отрицательного цикла)--------------" << endl;
+	time.reset();//Сброс таймера.
+
+	Graph.Algoritm_Bellman_Ford();
+	cout << "Тест 1: " << time.elapsed() << endl;//Вывод времени.
+	time.reset();//Сброс таймера.
+	
+	Graph.Algoritm_Bellman_Ford();
+	cout << "Тест 2: " << time.elapsed() << endl;//Вывод времени.
+	time.reset();//Сброс таймера.
+	
+	Graph.Algoritm_Bellman_Ford();
+	cout << "Тест 3: " << time.elapsed() << endl;//Вывод времени.
+	time.reset();//Сброс таймера.
+
+	Graph.Algoritm_Bellman_Ford();
+	cout << "Тест 4: " << time.elapsed() << endl;//Вывод времени.
+	time.reset();//Сброс таймера.
+
+	Graph.Algoritm_Bellman_Ford();
+	cout << "Тест 5: " << time.elapsed() << endl;//Вывод времени.
 	time.reset();//Сброс таймера.
 
 	return 0;
