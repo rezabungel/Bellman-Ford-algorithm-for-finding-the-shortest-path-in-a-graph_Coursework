@@ -15,18 +15,18 @@ int main()
 	setlocale(LC_ALL, "Russian");
 	Timer time;//Объявления таймера.
 
-	string name_data_file = "Weighted graph.txt";  //Переменная, хранящая путь до файла с данными.
+	string name_data_file = "Weighted graph.txt"; //Переменная, хранящая путь до файла с данными.
 	string name_save_file = "Result of work.txt"; //Переменная хранящая путь до файла с результатом работы.
 
-	Bellman_Ford Graph(name_data_file);//Взвешанный граф берётся из файла.
+	Bellman_Ford Graph(name_data_file);//Взвешенный граф берётся из файла.
 
-	Graph.print_Matrix();//Вывод взвешанного графа в консоль. Взвешанный граф представлен в виде таблицы NxN, где N - кол-во вершин.
+	Graph.print_Matrix();//Вывод взвешенного графа в консоль. Взвешенный граф представлен в виде таблицы NxN, где N - кол-во вершин.
 
 	Graph.Algoritm_Bellman_Ford();//Применение алгоритма Беллмана-Форда. (Результат будет сохранен во внутреннюю переменную класса, также результат можно присвоить матрице 'vector<vector<int>> {имя_матрицы}').
 
 	vector<vector<int>> matrix_min_routes = Graph.Algoritm_Bellman_Ford();//Применение алгоритма Беллмана-Форда. (Результат будет сохранен во внутреннюю переменную класса и присвоен матрице 'vector<vector<int>> {имя_матрицы}').
 
-	Graph.print_Result();//Вывод матрици минимальных маршрутов в консоль для взвешанного графа.
+	Graph.print_Result();//Вывод матрицы минимальных маршрутов в консоль для взвешенного графа.
 
 	////Тест геттеров.
 	//vector<vector<int>> test_mat;
@@ -40,8 +40,8 @@ int main()
 	//test_info = Graph.get_Negative_cycle();
 	//
 	////Тест сеттеров. (После сеттеров, нужно будет применить алгоритм Беллмана-Форда ещё раз, так как матрица изменилась).
-	//Graph.set_row(3, test);
-	//Graph.set_column(3, test);
+	//Graph.set_Matrix_row(3, test);
+	//Graph.set_Matrix_column(3, test);
 
 	cout << endl << endl << endl << "Тест потокового вывода." << endl;
 	cout << Graph;
@@ -51,6 +51,6 @@ int main()
 
 	cout << time.elapsed();//Вывод времени.
 	time.reset();//Сброс таймера.
-	;
+
 	return 0;
 }
