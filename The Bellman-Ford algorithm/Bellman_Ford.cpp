@@ -250,7 +250,7 @@ vector<vector<int>> Bellman_Ford::Algoritm_Bellman_Ford()
 	{
 		for (int j = 0; j < Matrix.size(); j++)
 		{
-			if (Matrix[i][j] == 0)
+			if (Matrix[i][j] == 0 && i != j)
 			{
 				temp.push_back(9999999); //9999999 - наша бесконечность, которая говорит об отсутствии пути.
 			}
@@ -263,15 +263,6 @@ vector<vector<int>> Bellman_Ford::Algoritm_Bellman_Ford()
 		help_matrix.push_back(temp);
 		intermediate_matrix.push_back(temp);
 		temp.clear();
-	}
-	for (int i = 0; i < Matrix.size(); i++)//Если у вершины нет петли, то в ней устанавливается 0.
-	{
-		if (Result[i][i] == 9999999)
-		{
-			Result[i][i] = 0;
-			help_matrix[i][i] = 0;
-			intermediate_matrix[i][i] = 0;
-		}
 	}
 
 	for (int i = 0; i < Matrix.size() - 1; i++) //Алгоритм находит кратчайший путь до всех вершин за N-1 итерацию, где N - кол-во вершин в графе.

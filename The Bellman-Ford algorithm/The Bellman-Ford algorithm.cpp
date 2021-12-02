@@ -60,11 +60,11 @@ int main()
 	Graph.Algoritm_Bellman_Ford();
 	cout << "Тест 1: " << time.elapsed() << endl;//Вывод времени.
 	time.reset();//Сброс таймера.
-	
+
 	Graph.Algoritm_Bellman_Ford();
 	cout << "Тест 2: " << time.elapsed() << endl;//Вывод времени.
 	time.reset();//Сброс таймера.
-	
+
 	Graph.Algoritm_Bellman_Ford();
 	cout << "Тест 3: " << time.elapsed() << endl;//Вывод времени.
 	time.reset();//Сброс таймера.
