@@ -1,5 +1,72 @@
 ﻿#include "Bellman_Ford.h"
 
+//Конструктор.
+Edge::Edge(const Edge& E)
+{
+	from = E.from;
+	to = E.to;
+	weight = E.weight;
+}
+
+//Геттеры.
+int Edge::get_from()
+{
+	return from;
+}
+int Edge::get_to()
+{
+	return to;
+}
+int Edge::get_weight()
+{
+	return weight;
+}
+
+//Сеттеры.
+void Edge::set_from(int a)
+{
+	from = a;
+}
+void Edge::set_to(int a)
+{
+	to = a;
+}
+void Edge::set_weight(int a)
+{
+	weight = a;
+}
+
+//Операции сравнения.
+bool Edge::operator<(const Edge& E)
+{
+	if (weight < E.weight)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+bool Edge::operator>(const Edge& E)
+{
+	if (weight > E.weight)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
+ostream& operator<<(ostream& s, Edge& e)
+{
+	s << "From: " << e.from << ", to: " << e.to << ", weight: " << e.weight;
+	return s;
+}
+
 //Конструктор 1 - Взятие матрицы графа из файла.
 Bellman_Ford::Bellman_Ford(string namefile)
 {
@@ -41,7 +108,7 @@ Bellman_Ford::Bellman_Ford(string namefile)
 	cout << "***************************************************************************************************" << endl;
 }
 
-//Конструктор 2 - Задание матрицы в программе (ввод одного числа, создатся матрица NxN и начнется заполнение случайными числами).
+//Конструктор 2 - Задание матрицы в программе (ввод одного числа, создастся матрица NxN и начнется заполнение случайными числами).
 Bellman_Ford::Bellman_Ford(int size_matrix)
 {
 	for (int i = 0; i < size_matrix; i++)
@@ -82,7 +149,7 @@ vector<vector<int>> Bellman_Ford::get_Result()
 		cout << "Алгоритм Беллмана-Форда не применялся или матрица, хранящая информацию о графе, была изменена." << endl;
 		cout << "Сейчас будет применён алгоритм и выдан результат." << endl;
 		cout << "***************************************************************************************************" << endl << endl << endl;
-		Algoritm_Bellman_Ford();
+		Algoritm_Bellman_Ford_based_on_the_list();
 	}
 	return Result;
 }
@@ -135,7 +202,7 @@ bool Bellman_Ford::get_Negative_cycle()
 		cout << "Алгоритм Беллмана-Форда не применялся или матрица, хранящая информацию о графе, была изменена." << endl;
 		cout << "Сейчас будет применён алгоритм и выдан результат." << endl;
 		cout << "***************************************************************************************************" << endl << endl << endl;
-		Algoritm_Bellman_Ford();
+		Algoritm_Bellman_Ford_based_on_the_list();
 		return Negative_cycle;
 	}
 	return Negative_cycle;
@@ -182,6 +249,7 @@ void Bellman_Ford::set_Matrix_row(int number_row, vector<int> row)
 		cout << endl << "///////////////////////////////////////////////////////////////////////////////////////////////////" << endl;
 		Matrix[0] = row;
 	}
+	Negative_cycle = false;
 	Application_of_the_algorithm = false;
 }
 
@@ -227,10 +295,11 @@ void Bellman_Ford::set_Matrix_column(int number_column, vector<int> column)
 			Matrix[i][0] = column[i];
 		}
 	}
+	Negative_cycle = false;
 	Application_of_the_algorithm = false;
 }
 
-vector<vector<int>> Bellman_Ford::Algoritm_Bellman_Ford()
+vector<vector<int>> Bellman_Ford::Algoritm_Bellman_Ford_based_on_the_matrix()
 {
 	//Обнуляем матрицу кратчайших путей. Это обнуление будет выполняться, когда мы повторно применяем алгоритм (больше 1 раза). 
 	if (Result.size() > 0)
@@ -336,6 +405,87 @@ vector<vector<int>> Bellman_Ford::Algoritm_Bellman_Ford()
 	return Result;
 }
 
+vector<vector<int>> Bellman_Ford::Algoritm_Bellman_Ford_based_on_the_list()
+{
+	//Обнуляем матрицу кратчайших путей. Это обнуление будет выполняться, когда мы повторно применяем алгоритм (больше 1 раза). 
+	if (Result.size() > 0)
+	{
+		for (int i = 0; i < Result.size(); i++)
+		{
+			Result[i].clear();
+		}
+		Result.clear();
+	}
+
+	vector<Edge> adjacency_list;//Список смежности.
+	for (int i = 0; i < Matrix.size(); i++)//Записывает все вершины матрицы смежности в виде списка смежности.
+	{
+		for (int j = 0; j < Matrix.size(); j++)
+		{
+			if (Matrix[i][j] != 0 && i != j)
+			{
+				Edge for_push(i, j, Matrix[i][j]);
+				adjacency_list.push_back(for_push);
+			}
+		}
+	}
+
+	for (int vertex = 0; vertex < Matrix.size(); vertex++)
+	{
+		vector<int> dist(Matrix.size(), 9999999);//Минимальные расстояния от стартовой вершины до всех остальных. (9999999 - наша бесконечность).
+		dist[vertex] = 0; //Стартовая вершина инициализируется 0.
+
+		for (int i = 0; i < Matrix.size() - 1; i++) //Алгоритм находит кратчайший путь от стартовой вершины до всех остальных за N-1 итерацию, где N - кол-во вершин в графе.
+		{
+			for (int j = 0; j < adjacency_list.size(); j++)
+			{
+				if (relax(dist[adjacency_list[j].get_to()], dist[adjacency_list[j].get_from()], adjacency_list[j].get_weight()))
+				{
+					dist[adjacency_list[j].get_to()] = dist[adjacency_list[j].get_from()] + adjacency_list[j].get_weight();
+				}
+			}
+		}
+
+		vector<int> change_dist = dist;
+		for (int j = 0; j < adjacency_list.size(); j++) //N-ная итерация, которая определит наличие отрицательного цикла.
+		{
+			if (relax(change_dist[adjacency_list[j].get_to()], change_dist[adjacency_list[j].get_from()], adjacency_list[j].get_weight()))
+			{
+				change_dist[adjacency_list[j].get_to()] = change_dist[adjacency_list[j].get_from()] + adjacency_list[j].get_weight();
+			}
+		}
+
+		//Если на N-ной итерации изменилось минимальное расстояние, то граф имеет отрицательный цикл, поэтому говорить о минимальном пути не имеет смысла.
+		if (change_dist == dist)
+		{
+
+			//cout << endl << endl << endl << "***************************************************************************************************" << endl;
+			//cout << "Отрицательного цикла в графе - нет.";
+			//cout << endl << "***************************************************************************************************" << endl << endl << endl;
+			Negative_cycle = false;
+			Result.push_back(dist);
+		}
+		else
+		{
+			//cout << endl << endl << endl << "***************************************************************************************************" << endl;
+			//cout << "Граф содержит отрицательный цикл." << endl;
+			//cout << "Матрица, хранящая информацию о кратчайших путях - будет хранить нули.";
+			//cout << endl << "***************************************************************************************************" << endl << endl << endl;
+
+			//Записываем нули.	
+			vector<vector<int>> for_result(Matrix.size(), vector<int>(Matrix.size(), 0));
+			Result = for_result;
+
+			Negative_cycle = true;
+			Application_of_the_algorithm = true;
+			return Result;
+		}
+	}
+
+	Application_of_the_algorithm = true;
+	return Result;
+}
+
 void Bellman_Ford::print_Matrix()
 {
 	cout << "--------------------------------------------Data Matrix--------------------------------------------" << endl;
@@ -395,7 +545,7 @@ void Bellman_Ford::print_Result()
 	}
 }
 
-int Bellman_Ford::find_min(vector<int> result_of_addition)
+int Bellman_Ford::find_min(const vector<int>& result_of_addition)
 {
 	int min = result_of_addition[0];
 	for (int i = 1; i < result_of_addition.size(); i++)
@@ -406,6 +556,18 @@ int Bellman_Ford::find_min(vector<int> result_of_addition)
 		}
 	}
 	return min;
+}
+
+bool Bellman_Ford::relax(const int& old_weight, const int& new_way, const int& weight)
+{
+	if (old_weight > new_way + weight)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 void Bellman_Ford::save_work_to_file(string namefile)

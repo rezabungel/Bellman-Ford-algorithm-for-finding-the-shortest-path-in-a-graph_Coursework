@@ -6,6 +6,36 @@
 
 using namespace std;
 
+//Класс ребро. Используется для построения списков смежности.
+class Edge
+{
+private:
+	int from, to, weight;
+public:
+	//Конструктор.
+	Edge(int from = -1, int to = -1, int weight = 0) : from(from), to(to), weight(weight) {}
+	Edge(const Edge& E);
+
+	//Деструктор.
+	~Edge() {};
+
+	//Геттеры.
+	int get_from();
+	int get_to();
+	int get_weight();
+
+	//Сеттеры.
+	void set_from(int a);
+	void set_to(int a);
+	void set_weight(int a);
+
+	//Операции сравнения.
+	bool operator<(const Edge& E);
+	bool operator>(const Edge& E);
+
+	friend ostream& operator<<(ostream& s, Edge& e);
+};
+
 class Bellman_Ford
 {
 private:
@@ -24,7 +54,9 @@ private:
 	*/
 
 protected:
-	int find_min(vector<int> result_of_addition);
+	int find_min(const vector<int>& result_of_addition);
+
+	bool relax(const int& old_weight, const int& new_way, const int& weight);
 
 public:
 
@@ -59,8 +91,11 @@ public:
 	void set_Matrix_row(int number_row, vector<int> row);//Параметр 1 - номер строки. Параметр 2 - строка, которая заменит старую строку.
 	void set_Matrix_column(int number_column, vector<int> column);//Параметр 1 - номер столбца. Параметр 2 - столбец, который заменит старый столбец.
 
-	//Метод, реализующий алгоритм.
-	vector<vector<int>> Algoritm_Bellman_Ford();
+	//Метод, реализующий алгоритм. Раюотает на основе матрицы смежности.
+	vector<vector<int>> Algoritm_Bellman_Ford_based_on_the_matrix();
+
+	//Метод, реализующий алгоритм. Работает на основе списка смежности. (Работает быстрее).
+	vector<vector<int>> Algoritm_Bellman_Ford_based_on_the_list(); //Этот метод и будем оптимизировать по производительности.
 
 	//Вывод матрицы смежности.
 	void print_Matrix();
