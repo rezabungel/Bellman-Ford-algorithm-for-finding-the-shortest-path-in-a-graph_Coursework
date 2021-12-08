@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include <string>
-#include <fstream> //библиотека для работы с файлами.
+#include <fstream> //Библиотека для работы с файлами.
 #include "Bellman_Ford.h"
 #include "Timer.h"
 
@@ -42,9 +42,9 @@ int main()
 	//Graph.set_Matrix_row(3, test);
 	//Graph.set_Matrix_column(3, test);
 
-	//cout << endl << endl << endl << "Тест потокового вывода." << endl;
-	//cout << Graph;
-	//cout << "Конец теста потокового вывода." << endl << endl << endl;
+	cout << endl << endl << endl << "Тест потокового вывода." << endl;
+	cout << Graph;
+	cout << "Конец теста потокового вывода." << endl << endl << endl;
 
 	Graph.save_work_to_file(name_save_file);
 
@@ -54,64 +54,49 @@ int main()
 	//Проверка времени работы алгоритма.
 	cout << endl << endl << endl << endl << endl << endl << endl << endl << endl << endl; //Пропускает строчки в консоле для наглядности.
 	cout << "-------------------Тест времени работы алгоритма (граф без отрицательных циклов)-------------------" << endl;
-	double sred_time = 0;
 	time.reset();//Сброс таймера.
 
 	Graph.Algoritm_Bellman_Ford_based_on_the_matrix();
 	cout << "Тест 1 (based_on_the_matrix): " << time.elapsed() << endl;//Вывод времени.
-	sred_time = sred_time + time.elapsed();
 	time.reset();//Сброс таймера.
 
 	Graph.Algoritm_Bellman_Ford_based_on_the_matrix();
 	cout << "Тест 2 (based_on_the_matrix): " << time.elapsed() << endl;//Вывод времени.
-	sred_time = sred_time + time.elapsed();
 	time.reset();//Сброс таймера.
 
 	Graph.Algoritm_Bellman_Ford_based_on_the_matrix();
 	cout << "Тест 3 (based_on_the_matrix): " << time.elapsed() << endl;//Вывод времени.
-	sred_time = sred_time + time.elapsed();
 	time.reset();//Сброс таймера.
 
 	Graph.Algoritm_Bellman_Ford_based_on_the_matrix();
 	cout << "Тест 4 (based_on_the_matrix): " << time.elapsed() << endl;//Вывод времени.
-	sred_time = sred_time + time.elapsed();
 	time.reset();//Сброс таймера.
 
 	Graph.Algoritm_Bellman_Ford_based_on_the_matrix();
 	cout << "Тест 5 (based_on_the_matrix): " << time.elapsed() << endl;//Вывод времени.
-	sred_time = sred_time + time.elapsed();
-	time.reset();//Сброс таймера.
 
-	cout << "Среднее время работы алгоритма (based_on_the_matrix): " << sred_time / 5 << endl;//Вывод времени.
-	sred_time = 0;
+	cout << endl;
 	time.reset();//Сброс таймера.
 
 	Graph.Algoritm_Bellman_Ford_based_on_the_list();
 	cout << "Тест 1 (based_on_the_list): " << time.elapsed() << endl;//Вывод времени.
-	sred_time = sred_time + time.elapsed();
 	time.reset();//Сброс таймера.
 
 	Graph.Algoritm_Bellman_Ford_based_on_the_list();
 	cout << "Тест 2 (based_on_the_list): " << time.elapsed() << endl;//Вывод времени.
-	sred_time = sred_time + time.elapsed();
 	time.reset();//Сброс таймера.
 
 	Graph.Algoritm_Bellman_Ford_based_on_the_list();
 	cout << "Тест 3 (based_on_the_list): " << time.elapsed() << endl;//Вывод времени.
-	sred_time = sred_time + time.elapsed();
 	time.reset();//Сброс таймера.
 
 	Graph.Algoritm_Bellman_Ford_based_on_the_list();
 	cout << "Тест 4 (based_on_the_list): " << time.elapsed() << endl;//Вывод времени.
-	sred_time = sred_time + time.elapsed();
 	time.reset();//Сброс таймера.
 
 	Graph.Algoritm_Bellman_Ford_based_on_the_list();
 	cout << "Тест 5 (based_on_the_list): " << time.elapsed() << endl;//Вывод времени.
-	sred_time = sred_time + time.elapsed();
 	time.reset();//Сброс таймера.
-
-	cout << "Среднее время работы алгоритма (based_on_the_list): " << sred_time / 5 << endl;//Вывод времени.
 
 	return 0;
 }

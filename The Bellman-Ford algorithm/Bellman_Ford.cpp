@@ -164,7 +164,7 @@ vector<int> Bellman_Ford::get_Matrix_row(int number_row)
 	else
 	{
 		cout << endl << "///////////////////////////////////////////////////////////////////////////////////////////////////" << endl;
-		cout << "Строки c номером " << number_row << " нету в матрице. Будет возвращенна 1-ая строка.";
+		cout << "Строки c номером " << number_row << " нету в матрице. Будет возвращена 1-ая строка.";
 		cout << endl << "///////////////////////////////////////////////////////////////////////////////////////////////////" << endl;
 		row = Matrix[0];
 	}
@@ -430,56 +430,94 @@ vector<vector<int>> Bellman_Ford::Algoritm_Bellman_Ford_based_on_the_list()
 		}
 	}
 
-	for (int vertex = 0; vertex < Matrix.size(); vertex++)
+	//Итерация для первой (нулевой) вершины, для определения наличия отрицательного цикла.
+	vector<int> dist(Matrix.size(), 9999999);//Минимальные расстояния от стартовой вершины до всех остальных. (9999999 - наша бесконечность).
+	dist[0] = 0; //Стартовая вершина инициализируется 0.
+	vector<int> past = dist;
+
+	for (int i = 0; i < Matrix.size() - 1; i++) //Алгоритм находит кратчайший путь от стартовой вершины до всех остальных за N-1 итерацию, где N - кол-во вершин в графе.
+	{
+		for (int j = 0; j < adjacency_list.size(); j++)
+		{
+			//if (relax(dist[adjacency_list[j].get_to()], dist[adjacency_list[j].get_from()], adjacency_list[j].get_weight())) //Отказываемся от вызова функции (метода) relax. Применяем этот код сразу в алгоритме, для уменьшения времени работы.
+			if (dist[adjacency_list[j].get_to()] > dist[adjacency_list[j].get_from()] + adjacency_list[j].get_weight())
+			{
+				dist[adjacency_list[j].get_to()] = dist[adjacency_list[j].get_from()] + adjacency_list[j].get_weight();
+			}
+		}
+		if (past != dist)
+		{//Минимальные пути ещё не найдены.
+			past = dist;
+		}
+		else
+		{//Минимальные пути найдены, можно досрочно завершить цикл.
+			break;
+		}
+	}
+
+	//Проверяем отрицательный цикл только для первой вершины, если он будет, то досрочно завершаем алгоритм, если его не будет, то нет смысла проверять наличие отрицательного цикла для других вершин.
+	vector<int> change_dist = dist;
+	for (int j = 0; j < adjacency_list.size(); j++) //N-ная итерация, которая определит наличие отрицательного цикла.
+	{
+		//if (relax(change_dist[adjacency_list[j].get_to()], change_dist[adjacency_list[j].get_from()], adjacency_list[j].get_weight())) //Отказываемся от вызова функции (метода) relax. Применяем этот код сразу в алгоритме, для уменьшения времени работы.
+		if (change_dist[adjacency_list[j].get_to()] > change_dist[adjacency_list[j].get_from()] + adjacency_list[j].get_weight())
+		{
+			change_dist[adjacency_list[j].get_to()] = change_dist[adjacency_list[j].get_from()] + adjacency_list[j].get_weight();
+		}
+	}
+
+	//Если на N-ной итерации изменилось минимальное расстояние, то граф имеет отрицательный цикл, поэтому говорить о минимальном пути не имеет смысла.
+	if (change_dist == dist)
+	{
+		//cout << endl << endl << endl << "***************************************************************************************************" << endl;
+		//cout << "Отрицательного цикла в графе - нет.";
+		//cout << endl << "***************************************************************************************************" << endl << endl << endl;
+		Negative_cycle = false;
+	}
+	else
+	{
+		//cout << endl << endl << endl << "***************************************************************************************************" << endl;
+		//cout << "Граф содержит отрицательный цикл." << endl;
+		//cout << "Матрица, хранящая информацию о кратчайших путях - будет хранить нули.";
+		//cout << endl << "***************************************************************************************************" << endl << endl << endl;
+
+		//Записываем нули.	
+		vector<vector<int>> for_result(Matrix.size(), vector<int>(Matrix.size(), 0));
+		Result = for_result;
+
+		Negative_cycle = true;
+		Application_of_the_algorithm = true;
+		return Result;
+	}
+	Result.push_back(dist);//Выполнится если в графе нет отрицательного цикла.
+
+	//Начинаем с первой вершины, т.к. для нулевой вершины минимальные пути уже найдены. (Проверку на отрицательный цикл, не выполняем, т.к. дошли этого момента, значит его точно нет).
+	for (int vertex = 1; vertex < Matrix.size(); vertex++)
 	{
 		vector<int> dist(Matrix.size(), 9999999);//Минимальные расстояния от стартовой вершины до всех остальных. (9999999 - наша бесконечность).
 		dist[vertex] = 0; //Стартовая вершина инициализируется 0.
+		vector<int> past = dist;
 
 		for (int i = 0; i < Matrix.size() - 1; i++) //Алгоритм находит кратчайший путь от стартовой вершины до всех остальных за N-1 итерацию, где N - кол-во вершин в графе.
 		{
 			for (int j = 0; j < adjacency_list.size(); j++)
 			{
-				if (relax(dist[adjacency_list[j].get_to()], dist[adjacency_list[j].get_from()], adjacency_list[j].get_weight()))
+				//if (relax(dist[adjacency_list[j].get_to()], dist[adjacency_list[j].get_from()], adjacency_list[j].get_weight())) //Отказываемся от вызова функции (метода) relax. Применяем этот код сразу в алгоритме, для уменьшения времени работы.
+				if (dist[adjacency_list[j].get_to()] > dist[adjacency_list[j].get_from()] + adjacency_list[j].get_weight())
 				{
 					dist[adjacency_list[j].get_to()] = dist[adjacency_list[j].get_from()] + adjacency_list[j].get_weight();
 				}
 			}
-		}
-
-		vector<int> change_dist = dist;
-		for (int j = 0; j < adjacency_list.size(); j++) //N-ная итерация, которая определит наличие отрицательного цикла.
-		{
-			if (relax(change_dist[adjacency_list[j].get_to()], change_dist[adjacency_list[j].get_from()], adjacency_list[j].get_weight()))
-			{
-				change_dist[adjacency_list[j].get_to()] = change_dist[adjacency_list[j].get_from()] + adjacency_list[j].get_weight();
+			if (past != dist)
+			{//Минимальные пути ещё не найдены.
+				past = dist;
+			}
+			else
+			{//Минимальные пути найдены, можно досрочно завершить цикл.
+				break;
 			}
 		}
-
-		//Если на N-ной итерации изменилось минимальное расстояние, то граф имеет отрицательный цикл, поэтому говорить о минимальном пути не имеет смысла.
-		if (change_dist == dist)
-		{
-
-			//cout << endl << endl << endl << "***************************************************************************************************" << endl;
-			//cout << "Отрицательного цикла в графе - нет.";
-			//cout << endl << "***************************************************************************************************" << endl << endl << endl;
-			Negative_cycle = false;
-			Result.push_back(dist);
-		}
-		else
-		{
-			//cout << endl << endl << endl << "***************************************************************************************************" << endl;
-			//cout << "Граф содержит отрицательный цикл." << endl;
-			//cout << "Матрица, хранящая информацию о кратчайших путях - будет хранить нули.";
-			//cout << endl << "***************************************************************************************************" << endl << endl << endl;
-
-			//Записываем нули.	
-			vector<vector<int>> for_result(Matrix.size(), vector<int>(Matrix.size(), 0));
-			Result = for_result;
-
-			Negative_cycle = true;
-			Application_of_the_algorithm = true;
-			return Result;
-		}
+		Result.push_back(dist);
 	}
 
 	Application_of_the_algorithm = true;
@@ -558,16 +596,10 @@ int Bellman_Ford::find_min(const vector<int>& result_of_addition)
 	return min;
 }
 
-bool Bellman_Ford::relax(const int& old_weight, const int& new_way, const int& weight)
+inline bool Bellman_Ford::relax(const int& old_weight, const int& new_way, const int& weight)
 {
-	if (old_weight > new_way + weight)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+	//Тернарный оператор.
+	return (old_weight > new_way + weight) ? (true) : (false);
 }
 
 void Bellman_Ford::save_work_to_file(string namefile)
