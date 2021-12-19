@@ -98,5 +98,9 @@ int main()
 	cout << "Тест 5 (based_on_the_list): " << time.elapsed() << endl;//Вывод времени.
 	time.reset();//Сброс таймера.
 
+	cout << "\nВведите любой символ для завершения...\n";
+	char end;
+	cin >> end;
+
 	return 0;
 }
